@@ -1,0 +1,46 @@
+AWSTemplateFormatVersion: 2010-09-09
+Description: |
+  This project converts numbers into Roman Numerals.
+
+Resources:
+  RomanNumeralsProject:
+    Type: AWS::EC2::Instance
+    Properties:
+      ImageId: ami-01c647eace872fc02
+      InstanceType: t2.micro
+      KeyName: firstkey
+      SecurityGroups: 
+        - !Ref RomanNumeralsProjectSG
+      Tags:
+        - Key: Name
+          Value: MerveInstance
+        - Key: Project
+          Value: RomanNumerals
+      UserData: 
+        Fn::Base64: !Sub |
+            #! /bin/bash
+            sudo dnf update -y
+            sudo dnf install python -y
+            sudo dnf install python3-pip -y
+            sudo pip install Flask
+            sudo dnf install httpd -y
+            cd /var/www/html/
+            sudo chmod -R 777 /var/www/html/
+            
+
+
+
+  RomanNumeralsProjectSG:
+    Type: AWS::EC2::SecurityGroup
+    Properties:
+      GroupDescription: Allows SSH # Required
+      GroupName: "Roman-Numerals-Project-SG"
+      SecurityGroupIngress: 
+        - IpProtocol: tcp
+          FromPort: 22
+          ToPort: 22
+          CidrIp: 0.0.0.0/0
+        - IpProtocol: tcp
+          FromPort: 80
+          ToPort: 80
+          CidrIp: 0.0.0.0/0
