@@ -13,18 +13,18 @@ def convert(decimal_num):
 
 @app.route('/', methods=['GET'])
 def main_get():
-    return render_template('index.html', developer_name='Callahan - Mentor', not_valid=False)
+    return render_template('index.html', developer_name='Merve Eriskin', not_valid=False)
 
 @app.route('/', methods=['POST'])
 def main_post():
     alpha = request.form['number']
     if not alpha.isdecimal():
-        return render_template('index.html', developer_name='Callahan - Mentor', not_valid=True)
+        return render_template('index.html', developer_name='Merve Eriskin', not_valid=True)
 
     number=int(alpha)
     if not (0 < number < 4000):
-        return render_template('index.html', developer_name='Callahan - Mentor', not_valid=True)
-    return render_template('result.html', number_decimal=number, number_roman=convert(number), developer_name='Callahan - Mentor')
+        return render_template('index.html', developer_name='Merve Eriskin', not_valid=True)
+    return render_template('result.html', number_decimal=number, number_roman=convert(number), developer_name='Merve Eriskin')
 
 if __name__ == '__main__':
-   app.run(host='0.0.0.0', port=80)
+   app.run(host='0.0.0.0', port=8080)

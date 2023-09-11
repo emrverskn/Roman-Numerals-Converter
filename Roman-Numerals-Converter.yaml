@@ -21,14 +21,16 @@ Resources:
             #! /bin/bash
             sudo dnf update -y
             sudo dnf install python -y
-            sudo dnf install python3-pip -y
+            sudo dnf install pip -y
             sudo pip install Flask
-            sudo dnf install httpd -y
-            cd /var/www/html/
-            sudo chmod -R 777 /var/www/html/
-            
-
-
+            sudo dnf install nginx -y
+            sudo chmod -R 777 /usr/share/nginx/html/
+            sudo rm index.html
+            sudo wget -P templates https://raw.githubusercontent.com/emrverskn/Roman-Numerals-Converter/main/templates/index.html
+            sudo wget -P templates https://raw.githubusercontent.com/emrverskn/Roman-Numerals-Converter/main/templates/result.html
+            sudo wget https://raw.githubusercontent.com/emrverskn/Roman-Numerals-Converter/main/roman-numerals-converter-app.py
+            sudo systemctl start nginx
+            sudo systemctl enable nginx
 
   RomanNumeralsProjectSG:
     Type: AWS::EC2::SecurityGroup
@@ -43,4 +45,8 @@ Resources:
         - IpProtocol: tcp
           FromPort: 80
           ToPort: 80
+          CidrIp: 0.0.0.0/0
+        - IpProtocol: tcp
+          FromPort: 8080
+          ToPort: 8080
           CidrIp: 0.0.0.0/0
