@@ -23,14 +23,10 @@ Resources:
             sudo dnf install python -y
             sudo dnf install pip -y
             sudo pip install Flask
-            sudo dnf install nginx -y
-            sudo chmod -R 777 /usr/share/nginx/html/
-            sudo rm index.html
             sudo wget -P templates https://raw.githubusercontent.com/emrverskn/Roman-Numerals-Converter/main/templates/index.html
             sudo wget -P templates https://raw.githubusercontent.com/emrverskn/Roman-Numerals-Converter/main/templates/result.html
             sudo wget https://raw.githubusercontent.com/emrverskn/Roman-Numerals-Converter/main/roman-numerals-converter-app.py
-            sudo systemctl start nginx
-            sudo systemctl enable nginx
+            sudo python3 roman-numerals-converter-app.py
 
   RomanNumeralsProjectSG:
     Type: AWS::EC2::SecurityGroup
