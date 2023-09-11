@@ -1,0 +1,47 @@
+AWSTemplateFormatVersion: 2010-09-09
+Description: |
+  101-kittens-carousel-static-website-ec2 Project
+
+Resources:
+  MerveInstance:
+    Type: AWS::EC2::Instance
+    Properties:
+      ImageId: ami-01c647eace872fc02
+      InstanceType: t2.micro
+      KeyName: firstkey 
+      SecurityGroups:
+        - !Ref MerveInstanceSG
+      Tags:
+        - Key: Name
+          Value: MerveInstance
+        - Key: Project
+          Value: Kitten-Carousel-Project
+      UserData:
+        Fn::Base64: !Sub |
+          #! /bin/bash
+          sudo dnf update -y
+          sudo dnf install httpd -y
+          cd /var/www/html/
+          sudo chmod -R 777 /var/www/html/
+          FLDR=https://raw.githubusercontent.com/emrverskn/Kitten-Carousel/7f5e4ebf06bb1120ef8d6fa1b80ed38d84b4fb7f/101-kittens-carousel-static-website-ec2/static-web/
+          wget $FLDR/cat0.jpg
+          wget $FLDR/cat1.jpg
+          wget $FLDR/cat2.jpg
+          wget $FLDR/index.html
+          sudo systemctl start httpd
+          sudo systemctl enable httpd
+
+  MerveInstanceSG:
+    Type: AWS::EC2::SecurityGroup
+    Properties:
+      GroupDescription: Allows SSH
+      GroupName: "Kitten-Carousel-SG"
+      SecurityGroupIngress:
+        - IpProtocol: tcp
+          FromPort: 22
+          ToPort: 22
+          CidrIp: 0.0.0.0/0
+        - IpProtocol: tcp
+          FromPort: 80
+          ToPort: 80
+          CidrIp: 0.0.0.0/0
