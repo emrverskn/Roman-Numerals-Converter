@@ -2,27 +2,30 @@ AWSTemplateFormatVersion: 2010-09-09
 Description: |
   This project converts numbers into Roman numerals.
 
+Parameters:
+  LatestAmiId:
+    Type: "AWS::SSM::Parameter::Value<AWS::EC2::Image::Id>"
+    Default: "/aws/service/ami-amazon-linux-latest/al2023-ami-kernel-default-x86_64"
+
 Resources:
   MerveInstance:
     Type: AWS::EC2::Instance
     Properties:
-      ImageId: ami-04cb4ca688797756f
+      ImageId: !Ref LatestAmiId
       InstanceType: t2.micro
       KeyName: firstkey 
       SecurityGroups:
         - !Ref MerveInstanceSG
       Tags:
         - Key: Name
-          Value: MerveEriskin
-        - Key: Project
-          Value: Roman-Numerals-Project
+          Value: !Sub Web Server of StackName ${AWS::StackName}
       UserData:
         Fn::Base64: !Sub |
           #! /bin/bash
-          sudo dnf update -y
-          sudo dnf install python -y
-          sudo dnf install pip -y
-          sudo pip install Flask
+          dnf update -y
+          dnf install python -y
+          dnf install pip -y
+          pip install Flask
           wget -P templates https://raw.githubusercontent.com/emrverskn/Roman-Numerals-Converter/main/templates/index.html
           wget -P templates https://raw.githubusercontent.com/emrverskn/Roman-Numerals-Converter/main/templates/result.html
           wget https://raw.githubusercontent.com/emrverskn/Roman-Numerals-Converter/main/roman-numerals-converter-app.py
@@ -47,3 +50,10 @@ Resources:
           FromPort: 8080
           ToPort: 8080
           CidrIp: 0.0.0.0/0
+
+Outputs:
+  WebsiteURL:
+    Description: This output gives the URL of EC2.
+    Value: !Sub 
+      - http://${PublicAddress}
+      - PublicAddress: !GetAtt MerveInstance.PublicDnsName
